@@ -39,7 +39,7 @@ var itemSchema = new Schema({
             type: Number,
         }
     ,
-    salt:
+    protein:
         {
             type: Number,
         }

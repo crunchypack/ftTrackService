@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
+const mongoConn = require('./mongoConfig'); // MongoDB connection string
 
 const app = express();
 
@@ -14,7 +15,7 @@ mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 // Connect to database
 mongoose.connect(
-  "mongodb://mgdb:ta7ZT0RG9kSNxXAJ@cluster0-shard-00-00.qwv0k.mongodb.net:27017,cluster0-shard-00-01.qwv0k.mongodb.net:27017,cluster0-shard-00-02.qwv0k.mongodb.net:27017/Miun?ssl=true&replicaSet=atlas-q85h55-shard-0&authSource=admin&retryWrites=true&w=majority",
+  mongoConn.connectString,
   { useNewUrlParser: true, useUnifiedTopology: true }
 ).then(() => console.log('connected to DB')).catch(error => console.error(error));
 let db = mongoose.connection;
@@ -142,7 +143,7 @@ app.post('/ft/addItem', (req, res, next) => {
       item.sodium = req.body.sodium;
       item.fat = req.body.fat;
       item.satfat = req.body.satfat;
-      item.salt = req.body.salt;
+      item.protein = req.body.protein;
       item.sugar = req.body.sugar;
       item.contains = req.body.contains;
       item.organic = req.body.organic;
@@ -169,6 +170,15 @@ app.get('/ft/getItems', (req,res,next) =>{
       res.send(err);
     }
     res.json(Items);
+  })
+});
+
+app.get('/ft/getItem/:ean',(req, res, next) => {
+  Items.findOne({ean: req.params.ean}).exec((error, item) =>{
+    if (error){
+      res.send(error);
+    }
+    res.json(item);
   })
 });
 // log item
