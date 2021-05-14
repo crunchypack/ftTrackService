@@ -1,13 +1,13 @@
-#Restful service
+# Restful service
 
-##Login
+## Login
 /ft/api/login
 
-##Add item
+## Add item
 /ft/addItem
 
-##Get all items
+## Get all items
 /ft/getItems
 
-##Get specific item
+## Get specific item
 /ft/getItem/:ean
