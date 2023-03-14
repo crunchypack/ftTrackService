@@ -9,7 +9,6 @@ const mongoConn = require('./mongoConfig'); // MongoDB connection string
 
 const app = express();
 
-app.use(cors());
 // Promise
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
@@ -42,12 +41,12 @@ app.use(
 // Allow Cross-origin resourse
 
 app.use(cors({
-  origin: 'https://localhost:4200',
+  origin: ['https://localhost:4200'],
   methods: ['GET','POST','DELETE','PUT'],
   credentials: true
 }));
 // app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 //   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
 //   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 //   next();
@@ -164,7 +163,8 @@ app.post('/ft/addItem', (req, res, next) => {
 });
 
 app.get('/ft/getItems', (req,res,next) =>{
-  console.log("Getting items");
+  let time = new Date();
+  console.log("Getting items from :" + req.connection.remoteAddress + ' at ' + time);
   Items.find({}).exec((err, Items)=>{
     if(err){
       res.send(err);
@@ -219,13 +219,7 @@ app.put('/ft/log/:year/:month/:day', (req, res, next) => {
       LogItem.findOneAndUpdate(
         { date: useDate, user: req.session.userName },
         {
-          energy: req.body.energy,
-          carbs: req.body.carbs,
-          sodium: req.body.sodium,
-          fat: req.body.fat,
-          satfat: req.body.satfat,
-          salt: req.body.salt,
-          sugar: req.body.sugar,
+          items: req.body.items
 
         }, { new: true },
         function (err, log) {
